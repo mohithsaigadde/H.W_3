@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f2f6fa;
+}
+.wrap { width: 80%; margin: 40px auto; }
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+label { font-weight: bold; display:block; }
+input[type=number] { width:100%; padding:8px; border:1px solid #ccc; border-radius:6px; }
+button { padding:8px 12px; border:none; border-radius:6px; cursor:pointer; }
+.btn-primary { background:#0e7490; color:white; }
+.btn-ghost { background:transparent; color:#0e7490; }
+.error { color:#b91c1c; }
+.note { color:#666; }
+.table-shell { overflow:auto; max-height:60vh; border:1px solid #ccc; border-radius:8px; }
+table { border-collapse:collapse; width:100%; }
+th,td { border:1px solid #ccc; padding:6px; text-align:right; }
+thead th { position:sticky; top:0; background:#eef6ff; }
+tbody th { position:sticky; left:0; background:#eef9f3; }
+tbody tr:nth-child(odd) td { background:#f9fafb; }

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Multiplication Table</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Dynamic Multiplication Table</h1>
+      <p>Enter integer ranges (−50..50). The top row are <strong>multipliers</strong> (horizontal), the first column are <strong>multiplicands</strong> (vertical).</p>
+    </header>
+
+    <section class="card">
+      <form id="tableForm" novalidate>
+        <div class="row">
+          <div>
+            <label for="hStart">Horizontal start</label>
+            <input id="hStart" type="number" value="1" />
+          </div>
+          <div>
+            <label for="hEnd">Horizontal end</label>
+            <input id="hEnd" type="number" value="5" />
+          </div>
+          <div>
+            <label for="vStart">Vertical start</label>
+            <input id="vStart" type="number" value="5" />
+          </div>
+          <div>
+            <label for="vEnd">Vertical end</label>
+            <input id="vEnd" type="number" value="8" />
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn-primary">Generate Table</button>
+          <button type="button" id="resetBtn" class="btn-ghost">Clear</button>
+          <span id="messages" class="note"></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="table-shell" id="tableShell"></div>
+    </section>
+
+    <footer>
+      <p><strong>Tip:</strong> You can change the numbers and click Generate again.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById('tableForm');
+      const msg = document.getElementById('messages');
+      const shell = document.getElementById('tableShell');
+      const resetBtn = document.getElementById('resetBtn');
+      const LIMIT_MIN = -50, LIMIT_MAX = 50, MAX_CELLS = 10000;
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+        const hStart = parseInt(document.getElementById('hStart').value);
+        const hEnd = parseInt(document.getElementById('hEnd').value);
+        const vStart = parseInt(document.getElementById('vStart').value);
+        const vEnd = parseInt(document.getElementById('vEnd').value);
+        const errors = [];
+
+        if ([hStart, hEnd, vStart, vEnd].some(isNaN)) errors.push('All values must be integers.');
+        if (hStart > hEnd) errors.push('Horizontal start must be ≤ end.');
+        if (vStart > vEnd) errors.push('Vertical start must be ≤ end.');
+        if ([hStart, hEnd, vStart, vEnd].some(v => v < LIMIT_MIN || v > LIMIT_MAX)) errors.push('Values must be between -50 and 50.');
+
+        const width = Math.abs(hEnd - hStart) + 1;
+        const height = Math.abs(vEnd - vStart) + 1;
+        if (width * height > MAX_CELLS) errors.push('Table too large.');
+
+        if (errors.length) {
+          msg.textContent = errors.join(' ');
+          msg.className = 'error';
+          shell.innerHTML = '';
+          return;
+        }
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        const corner = document.createElement('th');
+        corner.className = 'corner';
+        corner.textContent = '×';
+        trHead.appendChild(corner);
+        for (let x = hStart; x <= hEnd; x++) {
+          const th = document.createElement('th');
+          th.textContent = x;
+          trHead.appendChild(th);
+        }
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        for (let y = vStart; y <= vEnd; y++) {
+          const tr = document.createElement('tr');
+          const th = document.createElement('th');
+          th.textContent = y;
+          tr.appendChild(th);
+          for (let x = hStart; x <= hEnd; x++) {
+            const td = document.createElement('td');
+            td.textContent = x * y;
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+        shell.innerHTML = '';
+        shell.appendChild(table);
+      });
+
+      resetBtn.addEventListener('click', () => {
+        form.reset();
+        shell.innerHTML = '';
+        msg.textContent = 'Cleared.';
+      });
+    })();
+  </script>
+</body>
+</html>
+
